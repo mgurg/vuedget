@@ -1,33 +1,28 @@
+<script setup>
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+  customParam: String
+})
+
+const isOpen = ref(false)
+const currentDate = computed(() => new Date().toLocaleString())
+
+const toggleWidget = () => {
+  isOpen.value = !isOpen.value
+}
+</script>
+
 <template>
   <div class="chat-widget">
     <button @click="toggleWidget" class="floating-button">Chat</button>
     <div v-if="isOpen" class="widget-window">
       <h2>Current Date:</h2>
       <p>{{ currentDate }}</p>
+      <p>Custom Parameter: {{ customParam }}</p>
     </div>
   </div>
 </template>
-
-<script>
-import { ref, computed } from 'vue'
-
-export default {
-  setup() {
-    const isOpen = ref(false)
-    const currentDate = computed(() => new Date().toLocaleString())
-
-    const toggleWidget = () => {
-      isOpen.value = !isOpen.value
-    }
-
-    return {
-      isOpen,
-      currentDate,
-      toggleWidget
-    }
-  }
-}
-</script>
 
 <style scoped>
 .chat-widget {

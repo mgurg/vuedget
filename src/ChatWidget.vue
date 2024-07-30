@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
@@ -48,9 +48,9 @@ onMounted(fetchWeatherData)
     <div v-if="isOpen" class="widget-window">
       <h2>Weather in {{ cityName }}</h2>
       <p>{{ currentDate }}</p>
-      <div v-if="loading">Loading weather data...</div>
-      <div v-else-if="error">{{ error }}</div>
-      <div v-else-if="weatherData">
+      <div v-if="loading" class="loading">Loading weather data...</div>
+      <div v-else-if="error" class="error">{{ error }}</div>
+      <div v-else-if="weatherData" class="weather-data">
         <p>Temperature: {{ weatherData.main.temp }}°C</p>
         <p>Weather: {{ weatherData.weather[0].description }}</p>
         <p>Humidity: {{ weatherData.main.humidity }}%</p>
@@ -103,7 +103,7 @@ onMounted(fetchWeatherData)
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Typography within the widget */

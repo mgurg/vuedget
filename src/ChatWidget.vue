@@ -26,7 +26,7 @@ const fetchWeatherData = async () => {
     const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
       params: {
         q: props.cityName,
-        appid: 'YOUR_API_KEY_HERE', // Replace with your OpenWeatherMap API key
+        appid: import.meta.env.VITE_OPENWEATHERMAP_API_KEY,
         units: 'metric'
       }
     })

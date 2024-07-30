@@ -1,28 +1,67 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
 
 const props = defineProps({
-  customParam: String
+  cityName: String
 })
 
 const isOpen = ref(false)
 const currentDate = computed(() => new Date().toLocaleString())
+const weatherData = ref(null)
+const loading = ref(false)
+const error = ref(null)
 
 const toggleWidget = () => {
   isOpen.value = !isOpen.value
 }
+
+const fetchWeatherData = async () => {
+  if (!props.cityName) return
+
+  loading.value = true
+  error.value = null
+
+  try {
+    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
+      params: {
+        q: props.cityName,
+        appid: 'YOUR_API_KEY_HERE', // Replace with your OpenWeatherMap API key
+        units: 'metric'
+      }
+    })
+    weatherData.value = response.data
+  } catch (err) {
+    console.error('Error fetching weather data:', err)
+    error.value = 'Failed to fetch weather data. Please try again.'
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchWeatherData)
 </script>
 
 <template>
   <div class="chat-widget">
-    <button @click="toggleWidget" class="floating-button">Chat</button>
+    <button @click="toggleWidget" class="floating-button">Weather</button>
     <div v-if="isOpen" class="widget-window">
-      <h2>Current Date:</h2>
+      <h2>Weather in {{ cityName }}</h2>
       <p>{{ currentDate }}</p>
-      <p>Custom Parameter: {{ customParam }}</p>
+      <div v-if="loading">Loading weather data...</div>
+      <div v-else-if="error">{{ error }}</div>
+      <div v-else-if="weatherData">
+        <p>Temperature: {{ weatherData.main.temp }}°C</p>
+        <p>Weather: {{ weatherData.weather[0].description }}</p>
+        <p>Humidity: {{ weatherData.main.humidity }}%</p>
+      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Styles remain the same */
+</style>
 
 <style scoped>
 .chat-widget {
@@ -47,7 +86,7 @@ const toggleWidget = () => {
   right: 0;
   width: 300px;
   height: 200px;
-  background-color: white;
+  background-color: #607fb4;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 20px;

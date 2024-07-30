@@ -15,7 +15,7 @@ function createWidget() {
     document.body.appendChild(widgetContainer)
 
     const app = createApp(ChatWidget, {
-        customParam: getScriptParam('param')
+        cityName: getScriptParam('city')
     })
     app.mount(widgetContainer)
 }

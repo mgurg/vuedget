@@ -15,7 +15,9 @@ export default defineConfig({
                     vue: 'Vue'
                 }
             }
-        }
+        },
+        cssCodeSplit: false,
+        cssMinify: true
     },
     define: {
         'process.env': {},

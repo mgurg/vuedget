@@ -1,5 +1,12 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import ChatWidget from './ChatWidget.vue'
+
+function loadStyles(url) {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = url
+    document.head.appendChild(link)
+}
 
 function getScriptParam(paramName) {
     const scripts = document.getElementsByTagName('script');
@@ -13,6 +20,10 @@ function createWidget() {
     const widgetContainer = document.createElement('div')
     widgetContainer.id = 'chat-widget'
     document.body.appendChild(widgetContainer)
+
+    // Load styles
+    loadStyles('https://vuedget.onrender.com/style.css') // Adjust this URL to where your CSS is hosted
+
 
     const app = createApp(ChatWidget, {
         cityName: getScriptParam('city')

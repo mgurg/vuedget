@@ -1,9 +1,19 @@
+<!--src/ChatWidget.vue-->
 <script setup>
-import {computed, onMounted, ref} from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
-  cityName: String
+  cityName: String,
+  buttonColor: {
+    type: String,
+    default: '#007bff'
+  },
+  buttonPosition: {
+    type: String,
+    default: 'right',
+    validator: (value) => ['left', 'right'].includes(value)
+  }
 })
 
 const isOpen = ref(false)
@@ -43,8 +53,8 @@ onMounted(fetchWeatherData)
 </script>
 
 <template>
-  <div class="chat-widget">
-    <button @click="toggleWidget" class="floating-button">Weather</button>
+  <div class="chat-widget" :class="{ 'left': buttonPosition === 'left' }">
+    <button @click="toggleWidget" class="floating-button" :style="{ backgroundColor: buttonColor }">Weather</button>
     <div v-if="isOpen" class="widget-window">
       <h2>Weather in {{ cityName }}</h2>
       <p>{{ currentDate }}</p>
@@ -59,10 +69,6 @@ onMounted(fetchWeatherData)
   </div>
 </template>
 
-<style scoped>
-/* Styles remain the same */
-</style>
-
 <style>
 /* Base styles for the widget container */
 .chat-widget {
@@ -76,21 +82,26 @@ onMounted(fetchWeatherData)
   z-index: 9999; /* Ensure the widget stays on top */
 }
 
+/* Positioning for left-aligned widget */
+.chat-widget.left {
+  left: 20px;
+  right: auto;
+}
+
 /* Styles for the floating button */
 .chat-widget .floating-button {
   padding: 10px 20px;
-  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
-  transition: background-color 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .chat-widget .floating-button:hover {
-  background-color: #0056b3;
+  opacity: 0.8;
 }
 
 /* Styles for the widget window */
@@ -104,6 +115,12 @@ onMounted(fetchWeatherData)
   border-radius: 5px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Positioning for left-aligned widget window */
+.chat-widget.left .widget-window {
+  left: 0;
+  right: auto;
 }
 
 /* Typography within the widget */
@@ -138,5 +155,21 @@ onMounted(fetchWeatherData)
 
 .chat-widget .weather-data p {
   margin: 5px 0;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+  .chat-widget .widget-window {
+    width: 250px;
+  }
+
+  .chat-widget h2 {
+    font-size: 16px;
+  }
+
+  .chat-widget p,
+  .chat-widget .floating-button {
+    font-size: 12px;
+  }
 }
 </style>

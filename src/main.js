@@ -1,6 +1,13 @@
 import {createApp} from 'vue'
 import ChatWidget from './ChatWidget.vue'
 
+function loadStyles(url) {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = url
+    document.head.appendChild(link)
+}
+
 const DEFAULT_CONFIG = {
     buttonColor: '#007bff',
     buttonPosition: 'right',
@@ -34,6 +41,8 @@ async function createWidget(options = {}) {
     const widgetContainer = document.createElement('div')
     widgetContainer.id = 'chat-widget'
     document.body.appendChild(widgetContainer)
+
+    loadStyles('https://vuedget.onrender.com/style.css') // Adjust this URL to where your CSS is hosted
 
     const app = createApp(ChatWidget, {
         cityName: options.cityName || 'London',

@@ -1,8 +1,20 @@
-import {defineConfig} from 'vite'
-import vue from '@vitejs/plugin-vue'
+import {defineConfig} from 'vite';
+import vue from '@vitejs/plugin-vue';
+import {visualizer} from 'rollup-plugin-visualizer';
+
+// Check if ANALYZE environment variable is set
+const shouldAnalyze = process.env.ANALYZE === 'true';
 
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        shouldAnalyze && visualizer({
+            open: true, // Automatically opens the visualization in the browser
+            filename: 'stats.html', // Name of the stats file generated
+            gzipSize: true, // Include gzip size
+            brotliSize: true // Include brotli size
+        })
+    ].filter(Boolean),
     build: {
         lib: {
             entry: 'src/main.js',
@@ -23,4 +35,4 @@ export default defineConfig({
         'process.env': {},
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
     }
-})
+});

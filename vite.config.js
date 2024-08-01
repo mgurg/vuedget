@@ -5,7 +5,7 @@ import {visualizer} from 'rollup-plugin-visualizer';
 // Check if ANALYZE environment variable is set
 const shouldAnalyze = process.env.ANALYZE === 'true';
 
-export default defineConfig({
+export default defineConfig(({command}) => ({
     plugins: [
         vue(),
         shouldAnalyze && visualizer({
@@ -22,6 +22,7 @@ export default defineConfig({
             fileName: 'chat-widget'
         },
         rollupOptions: {
+            external: ['vue'],
             output: {
                 globals: {
                     vue: 'Vue'
@@ -34,5 +35,19 @@ export default defineConfig({
     define: {
         'process.env': {},
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
-    }
-});
+    },
+    // Add server configuration for development
+    server: {
+        port: 3000,
+        open: true
+    },
+    // Conditional configuration based on command
+    ...((command === 'serve') && {
+        // Development-specific configurations
+        build: {
+            rollupOptions: {
+                input: 'index.html'
+            }
+        }
+    })
+}));

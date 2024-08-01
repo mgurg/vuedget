@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import ChatWidget from './ChatWidget.vue'
 
 const DEFAULT_CONFIG = {
-    buttonColor: '#7b00ff',
+    buttonColor: '#007bff',
     buttonPosition: 'right',
     allowedDomains: ['*'],
 }
@@ -18,27 +18,12 @@ async function loadConfig() {
     }
 }
 
-function loadStyles(url) {
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = url
-    document.head.appendChild(link)
-}
-
-function getScriptParam(paramName) {
-    const scripts = document.getElementsByTagName('script')
-    const lastScript = scripts[scripts.length - 1]
-    const scriptSrc = lastScript.src
-    const urlParams = new URLSearchParams(scriptSrc.split('?')[1])
-    return urlParams.get(paramName)
-}
-
 function isDomainAllowed(allowedDomains) {
     const currentDomain = window.location.hostname
     return allowedDomains.includes('*') || allowedDomains.includes(currentDomain)
 }
 
-async function createWidget() {
+export async function createWidget(options = {}) {
     const config = await loadConfig()
 
     if (!isDomainAllowed(config.allowedDomains)) {
@@ -50,14 +35,17 @@ async function createWidget() {
     widgetContainer.id = 'chat-widget'
     document.body.appendChild(widgetContainer)
 
-    loadStyles('https://vuedget.onrender.com/style.css')
-
     const app = createApp(ChatWidget, {
-        cityName: getScriptParam('city'),
-        buttonColor: config.buttonColor,
-        buttonPosition: config.buttonPosition,
+        cityName: options.cityName || 'London',
+        buttonColor: options.buttonColor || config.buttonColor,
+        buttonPosition: options.buttonPosition || config.buttonPosition,
     })
     app.mount(widgetContainer)
 }
 
-createWidget()
+// For automatic initialization when the script is loaded
+if (typeof window !== 'undefined') {
+    createWidget({
+        cityName: new URL(document.currentScript.src).searchParams.get('city')
+    })
+}

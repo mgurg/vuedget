@@ -54,7 +54,7 @@ onMounted(fetchWeatherData)
 
 <template>
   <div class="chat-widget" :class="{ 'left': buttonPosition === 'left' }">
-    <button @click="toggleWidget" class="floating-button" :style="{ backgroundColor: buttonColor }">Weather</button>
+    <button @click="toggleWidget" class="floating-button" :style="{ backgroundColor: buttonColor }">Weather!</button>
     <div v-if="isOpen" class="widget-window">
       <h2>Weather in {{ cityName }}</h2>
       <p>{{ currentDate }}</p>

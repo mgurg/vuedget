@@ -9,24 +9,26 @@ export default defineConfig(({command}) => ({
     plugins: [
         vue(),
         shouldAnalyze && visualizer({
-            open: true, // Automatically opens the visualization in the browser
-            filename: 'stats.html', // Name of the stats file generated
-            gzipSize: true, // Include gzip size
-            brotliSize: true // Include brotli size
+            open: true,
+            filename: 'stats.html',
+            gzipSize: true,
+            brotliSize: true
         })
     ].filter(Boolean),
     build: {
         lib: {
             entry: 'src/main.js',
             name: 'ChatWidget',
-            fileName: 'chat-widget'
+            formats: ['iife'],
+            fileName: () => 'chat-widget.js' // This ensures a constant file name
         },
         rollupOptions: {
             external: ['vue'],
             output: {
                 globals: {
                     vue: 'Vue'
-                }
+                },
+                inlineDynamicImports: true
             }
         },
         cssCodeSplit: false,
@@ -36,14 +38,11 @@ export default defineConfig(({command}) => ({
         'process.env': {},
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
     },
-    // Add server configuration for development
     server: {
         port: 3000,
         open: true
     },
-    // Conditional configuration based on command
     ...((command === 'serve') && {
-        // Development-specific configurations
         build: {
             rollupOptions: {
                 input: 'index.html'

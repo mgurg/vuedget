@@ -23,7 +23,7 @@ function isDomainAllowed(allowedDomains) {
     return allowedDomains.includes('*') || allowedDomains.includes(currentDomain)
 }
 
-export async function createWidget(options = {}) {
+async function createWidget(options = {}) {
     const config = await loadConfig()
 
     if (!isDomainAllowed(config.allowedDomains)) {
@@ -43,9 +43,11 @@ export async function createWidget(options = {}) {
     app.mount(widgetContainer)
 }
 
-// For automatic initialization when the script is loaded
-if (typeof window !== 'undefined') {
-    createWidget({
-        cityName: new URL(document.currentScript.src).searchParams.get('city')
-    })
-}
+// Immediately invoke the createWidget function
+(async () => {
+    const script = document.currentScript;
+    const urlParams = new URLSearchParams(script.src.split('?')[1]);
+    await createWidget({
+        cityName: urlParams.get('city')
+    });
+})();

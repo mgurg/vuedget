@@ -20,14 +20,11 @@ export default defineConfig(({command}) => ({
             entry: 'src/main.js',
             name: 'ChatWidget',
             formats: ['iife'],
-            fileName: () => 'chat-widget.js' // This ensures a constant file name
+            fileName: () => 'chat-widget.js'
         },
         rollupOptions: {
-            external: ['vue'],
+            // Remove external configuration to bundle Vue
             output: {
-                globals: {
-                    vue: 'Vue'
-                },
                 inlineDynamicImports: true
             }
         },
